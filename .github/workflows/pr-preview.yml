@@ -15,21 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: rossjrw/pr-preview-action@v1
-        id: preview-step
-        with:
-          source-dir: ./dist
-          preview-branch: gh-pages
-          umbrella-dir: pr-preview
-          action: deploy
-
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
       - run: npm ci
-      - run: npm run build -- --base=${{ steps.preview-step.outputs.base-url }}/
+      - run: npm run build -- --base=/pr-preview/pr-${{ github.event.number }}/
       - run: cp dist/index.html dist/404.html
 
       - uses: rossjrw/pr-preview-action@v1
