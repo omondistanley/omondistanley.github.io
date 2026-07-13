@@ -1,0 +1,512 @@
+/* Unified shimmer system with performance optimizations */
+@mixin shimmer-base() {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit !important;
+  clip-path: inset(0 round var(--btn-radius));
+  -webkit-clip-path: inset(0 round var(--btn-radius));
+  pointer-events: none;
+  z-index: 0;
+  /* Performance optimizations */
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force hardware acceleration */
+  backface-visibility: hidden;
+  /* Consistent blur and masking */
+  filter: blur(var(--shimmer-blur, 8px));
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black var(--shimmer-fade-start, 16%), black var(--shimmer-fade-end, 84%), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black var(--shimmer-fade-start, 16%), black var(--shimmer-fade-end, 84%), transparent 100%);
+}
+
+/* Shimmer color variants using CSS custom properties */
+:root {
+  --shimmer-light-base: rgba(255, 255, 255, 0.12);
+  --shimmer-light-peak: rgba(255, 255, 255, 0.24);
+  --shimmer-dark-base: color-mix(in srgb, var(--heading-color) 8%, transparent);
+  --shimmer-dark-peak: color-mix(in srgb, var(--heading-color) 18%, transparent);
+}
+
+@mixin shimmer-gradient($intensity: 'normal') {
+  @if $intensity == 'subtle' {
+    background: linear-gradient(120deg,
+      transparent 0%,
+      var(--shimmer-light-base) 40%,
+      var(--shimmer-light-peak) 50%,
+      var(--shimmer-light-base) 60%,
+      transparent 100%
+    );
+  } @else if $intensity == 'bright' {
+    background: linear-gradient(120deg,
+      transparent 0%,
+      color-mix(in srgb, var(--shimmer-light-peak) 80%, transparent) 35%,
+      color-mix(in srgb, var(--shimmer-light-peak) 150%, white) 50%,
+      color-mix(in srgb, var(--shimmer-light-peak) 80%, transparent) 65%,
+      transparent 100%
+    );
+  } @else {
+    background: linear-gradient(120deg,
+      transparent 0%,
+      var(--shimmer-light-base) 38%,
+      var(--shimmer-light-peak) 50%,
+      var(--shimmer-light-base) 62%,
+      transparent 100%
+    );
+  }
+}
+
+/* Light theme shimmer adjustments */
+:root[data-theme='light'] {
+  --shimmer-light-base: color-mix(in srgb, var(--heading-color) 12%, transparent);
+  --shimmer-light-peak: color-mix(in srgb, var(--heading-color) 24%, transparent);
+}
+
+/* Global button radius override for React app */
+.btn {
+  border-radius: 25px !important;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.12s ease;
+}
+
+/* Ensure all gradient buttons (even those without the base .btn class) keep a 25px radius on all screens */
+.btn-gradient {
+  /* Shared radius so shimmer and border match exactly */
+  --btn-radius: 25px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--bg-color) 24%, transparent),
+    color-mix(in srgb, var(--heading-color) 12%, transparent)
+  );
+  color: var(--text-color);
+  border: 1px solid color-mix(in srgb, var(--bg-color) 30%, transparent);
+  border-radius: var(--btn-radius) !important;
+  padding: 0.625rem 1rem;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease, color 0.15s ease;
+  position: relative; /* allow shimmer to attach to the button itself */
+  overflow: hidden; /* keep shimmer clipped to the button, not the container */
+  /* Ensure proper clipping of child elements */
+  isolation: isolate;
+  contain: layout style paint;
+  /* Create a stacking context so ::after can sit under content */
+  z-index: 0;
+}
+
+/* Ensure button contents render above the shimmer overlay */
+.btn-gradient > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep shimmer overlay beneath button content while staying inside clip */
+.btn-gradient::after {
+  z-index: 0;
+}
+
+.btn.btn-primary {
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  border-color: var(--button-bg);
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  margin-left: -0.5rem;
+  }
+  
+  .btn.btn-primary:hover {
+    transform: translateY(1px);
+    box-shadow: 0 3px 6px var(--box-shadow-color);
+    background-color: var(--button-bg);
+  }
+  
+  
+  .btn.btn-outline-primary {
+  border-color: var(--button-bg);
+  }
+  
+  
+  .btn.btn-outline-secondary {
+  color: var(--button-text);
+  border-color: var(--button-bg);
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+  }
+  
+.btn.btn-outline-secondary:hover,
+.btn.btn-outline-secondary:focus-visible {
+  background-color: var(--hover-color);
+  color: var(--text-color);
+  transform: translateY(1px) scale(1.02);
+  box-shadow: 0 3px 6px var(--box-shadow-color);
+}
+  
+/* CTA: inherit hero button styling; keep spacing only */
+.cta-extracurricular-btn {
+  margin-top: 1rem;
+  /* Improve perf and visual smoothness */
+  will-change: transform, box-shadow, background;
+  transform-origin: center;
+  transition: background 220ms ease, border-color 220ms ease, box-shadow 200ms ease;
+  /* Explicitly enforce global 25px radius for CTA anchors */
+  border-radius: var(--btn-radius) !important;
+}
+
+.cta-extracurricular-btn:hover,
+.cta-extracurricular-btn:focus-visible {
+  box-shadow: 0 3px 8px var(--box-shadow-color);
+  animation: cta-nudge 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Invert gradient for CTA buttons only (keep hero buttons unchanged) */
+.cta-extracurricular-btn.btn-gradient {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--heading-color) 12%, transparent),
+    color-mix(in srgb, var(--bg-color) 24%, transparent)
+  );
+  position: relative;
+  overflow: hidden;
+  /* Make CTA border thinner than default */
+  border-width: 0.5px !important;
+}
+
+.cta-extracurricular-btn.btn-gradient:hover,
+.cta-extracurricular-btn.btn-gradient:focus-visible {
+  /* Inverse the gradient compared to default state (swap stops) */
+  background: linear-gradient(
+    135deg,
+    /* Flip order to shift gradient to the opposite side */
+    color-mix(in srgb, var(--heading-color) 22%, transparent),
+    color-mix(in srgb, var(--bg-color) 36%, transparent)
+  );
+  border-width: 0.5px !important;
+}
+
+/* Subtle sheen shimmer for CTA buttons */
+.cta-extracurricular-btn.btn-gradient::after {
+  /* Disable shimmer overlay globally */
+  display: none !important;
+  content: none !important;
+}
+
+/* Light theme: use background-aware sheen for visibility on bright surfaces */
+:root[data-theme='light'] .cta-extracurricular-btn.btn-gradient::after {
+  mix-blend-mode: multiply;
+}
+
+/* Coordinate shimmer across CTA buttons with slight stagger per button */
+.about-cta-group .cta-extracurricular-btn.btn-gradient::after { 
+  animation-delay: 0ms; 
+}
+.about-cta-group .cta-extracurricular-btn.btn-gradient:nth-child(2)::after {
+  /* Make View Projects shimmer significantly slower to de-emphasize */
+  animation-name: shimmer-sweep-subtle;
+  animation-duration: 4300ms;
+  animation-delay: 240ms;
+  --shimmer-opacity-start: 0.15;
+  --shimmer-opacity-peak: 0.5;
+}
+.about-cta-group .cta-extracurricular-btn.btn-gradient:nth-child(3)::after {
+  /* Make View Technical Experience shimmer the slowest for focus on Try JuaCode */
+  animation-name: shimmer-sweep-subtle;
+  animation-duration: 5200ms;
+  animation-delay: 400ms;
+  --shimmer-opacity-start: 0.1;
+  --shimmer-opacity-peak: 0.4;
+  --shimmer-blur: 9px;
+}
+
+/* Unified shimmer animations with optimized performance */
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-220%); opacity: 0; }
+  8% { transform: translateX(-220%); opacity: 0; }
+  15% { opacity: var(--shimmer-opacity-start, 0.3); }
+  25% { opacity: var(--shimmer-opacity-peak, 0.85); }
+  75% { opacity: var(--shimmer-opacity-peak, 0.85); }
+  85% { opacity: var(--shimmer-opacity-start, 0.3); }
+  92% { transform: translateX(220%); opacity: 0; }
+  100% { transform: translateX(220%); opacity: 0; }
+}
+
+@keyframes shimmer-sweep-subtle {
+  0% { transform: translateX(-220%); opacity: 0; }
+  10% { transform: translateX(-220%); opacity: 0; }
+  20% { opacity: var(--shimmer-opacity-start, 0.2); }
+  45% { opacity: var(--shimmer-opacity-peak, 0.6); }
+  55% { opacity: var(--shimmer-opacity-peak, 0.6); }
+  80% { opacity: var(--shimmer-opacity-start, 0.2); }
+  90% { transform: translateX(220%); opacity: 0; }
+  100% { transform: translateX(220%); opacity: 0; }
+}
+
+@keyframes shimmer-sweep-bright {
+  0% { transform: translateX(-200%); opacity: 0; }
+  6% { transform: translateX(-200%); opacity: 0; }
+  12% { opacity: var(--shimmer-opacity-start, 0.4); }
+  30% { opacity: var(--shimmer-opacity-peak, 0.95); }
+  70% { opacity: var(--shimmer-opacity-peak, 0.95); }
+  88% { opacity: var(--shimmer-opacity-start, 0.4); }
+  94% { transform: translateX(200%); opacity: 0; }
+  100% { transform: translateX(200%); opacity: 0; }
+}
+
+
+/* Curious button: yellow-tinted hover gradient reminiscent of classic site */
+/* Curious button: default yellow gradient, no border */
+.curious-btn.btn-gradient {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ffd54f 60%, transparent),
+    color-mix(in srgb, var(--bg-color) 18%, transparent)
+  );
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  border: 1px solid color-mix(in srgb, #ffd54f 55%, transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .curious-btn.btn-gradient {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, #ffca28 60%, transparent),
+    color-mix(in srgb, #0d1117 20%, transparent)
+  );
+  border: 1px solid color-mix(in srgb, #ffca28 55%, transparent);
+}
+
+.curious-btn.btn-gradient:hover,
+.curious-btn.btn-gradient:focus-visible {
+  background: linear-gradient(
+    135deg,
+    /* Flip order to shift gradient to the opposite side */
+    color-mix(in srgb, #ffb300 85%, transparent),
+    color-mix(in srgb, var(--bg-color) 18%, transparent)
+  );
+  background-size: 220% 220%;
+  /* Disable shimmer-like gradient shift */
+  animation: none;
+  border: 1px solid color-mix(in srgb, #e09100 62%, transparent);
+  box-shadow: 0 8px 18px color-mix(in srgb, #ffb300 56%, transparent);
+}
+
+[data-theme="dark"] .curious-btn.btn-gradient:hover,
+[data-theme="dark"] .curious-btn.btn-gradient:focus-visible {
+  background: linear-gradient(
+    135deg,
+    /* Flip order to shift gradient to the opposite side */
+    color-mix(in srgb, #ffb300 12%, transparent),
+    color-mix(in srgb, #0d1117 20%, transparent)
+  );
+  background-size: 220% 220%;
+  /* Disable shimmer-like gradient shift */
+  animation: none;
+  border: 1px solid color-mix(in srgb, #e09100 60%, transparent);
+  box-shadow: 0 8px 18px color-mix(in srgb, #ffb300 54%, transparent);
+}
+
+@keyframes curious-gradient-shift {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Pulse all hero section buttons on hover */
+.hero-buttons .btn-gradient:hover,
+.hero-buttons .btn-gradient:focus-visible {
+  animation: curious-pulse 900ms ease-out;
+}
+
+/* Reuse shimmer + pulse behaviors for JuaCode navbar button without changing colors */
+.juacode-btn.btn-gradient {
+  position: relative;
+  overflow: hidden;
+}
+
+.juacode-btn.btn-gradient::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Light theme: neutral sheen tuned for light BG */
+:root[data-theme='light'] .juacode-btn.btn-gradient::after {
+  display: none !important;
+}
+
+/* Disable JuaCode navbar shimmer on the JuaCode page to reduce distraction */
+.juacode-page .juacode-btn.btn-gradient::after,
+.juacode-btn.btn-gradient.active::after {
+  display: none !important;
+}
+
+/* Disable shimmer on highlights buttons */
+.highlight-grid .cta-extracurricular-btn.btn-gradient::after {
+  display: none !important;
+}
+
+.juacode-btn.btn-gradient:hover,
+.juacode-btn.btn-gradient:focus-visible {
+  animation: curious-pulse 900ms ease-out;
+}
+
+
+/* Pulse animation for Curious button */
+@keyframes curious-pulse {
+  0% { transform: translateY(1px) scale(1); }
+  40% { transform: translateY(1px) scale(1.03); }
+  70% { transform: translateY(1px) scale(1.015); }
+  100% { transform: translateY(1px) scale(1); }
+}
+
+/* Upward pulse specifically for Curious button */
+@keyframes curious-pulse-up {
+  0% { transform: translateY(-1px) scale(1); }
+  40% { transform: translateY(-1px) scale(1.03); }
+  70% { transform: translateY(-1px) scale(1.015); }
+  100% { transform: translateY(-1px) scale(1); }
+}
+
+/* Sheen shimmer effect using a moving highlight for a glassy feel */
+.curious-btn.btn-gradient::after {
+  /* Disable shimmer overlay */
+  display: none !important;
+  content: none !important;
+}
+
+/* Debug utility: force shimmer overlay to full-bleed and outline it when enabled */
+:root[data-debug-shimmer='true'] {
+  .cta-extracurricular-btn.btn-gradient::after,
+  .juacode-btn.btn-gradient::after,
+  .curious-btn.btn-gradient::after {
+    transform: none !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    background: red !important;
+    opacity: 0.3 !important;
+    z-index: 2 !important;
+  }
+}
+
+/* Light theme: higher-contrast yellow sheen for visibility */
+:root[data-theme='light'] .curious-btn.btn-gradient::after {
+  background: linear-gradient(120deg,
+    color-mix(in srgb, #e09c00 0%, transparent) 0%,
+    color-mix(in srgb, #ffb300 22%, transparent) 36%,
+    color-mix(in srgb, #ffffff 28%, transparent) 50%,
+    color-mix(in srgb, #ffb300 22%, transparent) 64%,
+    color-mix(in srgb, #e09c00 0%, transparent) 100%
+  );
+  mix-blend-mode: multiply;
+}
+
+[data-theme="dark"] .curious-btn.btn-gradient::after {
+  display: none !important;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .curious-btn.btn-gradient,
+  [data-theme="dark"] .curious-btn.btn-gradient,
+  .curious-btn.btn-gradient::after,
+  [data-theme="dark"] .curious-btn.btn-gradient::after,
+  .curious-btn.btn-gradient:hover,
+  .curious-btn.btn-gradient:focus-visible {
+    animation: none;
+  }
+}
+
+/* Dark theme inverted gradient for CTA */
+[data-theme="dark"] .cta-extracurricular-btn.btn-gradient {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--heading-color) 10%, transparent),
+    color-mix(in srgb, var(--bg-color) 55%, #0d1117 30%)
+  );
+}
+/* Button hover/focus styles */
+.btn-gradient:hover {
+  background: linear-gradient(
+    135deg,
+    /* Flip order to shift gradient to the opposite side */
+    color-mix(in srgb, var(--heading-color) 22%, transparent),
+    color-mix(in srgb, var(--bg-color) 36%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--bg-color) 40%, transparent);
+  box-shadow: 0 5px 10px var(--box-shadow-color);
+  transform: translateY(1px);
+  color: var(--text-color);
+}
+
+.btn-gradient:focus-visible {
+  outline: none;
+  box-shadow: 0 5px 10px var(--box-shadow-color), 0 0 0 2px color-mix(in srgb, var(--heading-color) 25%, transparent);
+  transform: translateY(1px);
+}
+
+/* Dark theme buttons */
+[data-theme="dark"] .btn-gradient {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--bg-color) 55%, #0d1117 30%),
+    color-mix(in srgb, var(--heading-color) 10%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--bg-color) 45%, transparent);
+}
+
+[data-theme="dark"] .btn-gradient:hover {
+  background: linear-gradient(
+    135deg,
+    /* Flip order to shift gradient to the opposite side */
+    color-mix(in srgb, var(--heading-color) 35%, transparent),
+    color-mix(in srgb, var(--bg-color) 30%, #0d1117 10%)
+  );
+  border-color: color-mix(in srgb, var(--bg-color) 30%, transparent);
+  box-shadow: 0 5px 10px var(--box-shadow-color);
+  transform: translateY(1px);
+  color: var(--text-color);
+}
+
+/* Keep arrow reveal on button hover */
+.btn-gradient:hover .blink-arrow { visibility: visible; }
+
+[data-theme="dark"] .cta-extracurricular-btn.btn-gradient:hover,
+[data-theme="dark"] .cta-extracurricular-btn.btn-gradient:focus-visible {
+  /* Inverse the gradient compared to default state (swap stops) */
+  background: linear-gradient(
+    135deg,
+    /* Flip order to shift gradient to the opposite side */
+    color-mix(in srgb, var(--heading-color) 35%, transparent),
+    color-mix(in srgb, var(--bg-color) 30%, #0d1117 10%)
+  );
+}
+
+@keyframes cta-nudge {
+  0% { transform: translateX(0) scale(1); }
+  30% { transform: translateX(3px) scale(1.01); }
+  60% { transform: translateX(-2px) scale(1.005); }
+  100% { transform: translateX(0) scale(1); }
+}
+
+/* Consolidated reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .cta-extracurricular-btn.btn-gradient::after,
+  .juacode-btn.btn-gradient::after,
+  .curious-btn.btn-gradient,
+  [data-theme="dark"] .curious-btn.btn-gradient,
+  .curious-btn.btn-gradient::after,
+  [data-theme="dark"] .curious-btn.btn-gradient::after {
+    animation: none;
+  }
+  
+  .cta-extracurricular-btn:hover,
+  .cta-extracurricular-btn:focus-visible,
+  .juacode-btn.btn-gradient:hover,
+  .juacode-btn.btn-gradient:focus-visible,
+  .curious-btn.btn-gradient:hover,
+  .curious-btn.btn-gradient:focus-visible {
+    animation: none;
+    transform: translateX(0);
+  }
+}

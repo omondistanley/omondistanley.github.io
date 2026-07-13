@@ -1,0 +1,45 @@
+.single-page-mode {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  gap: 1.25rem;
+}
+
+.single-page-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  padding: 1rem var(--container-padding) 0;
+}
+
+.single-page-note {
+  font-family: 'PT Sans', sans-serif;
+  color: var(--text-color);
+  background: color-mix(in srgb, var(--heading-color) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--heading-color) 24%, transparent);
+  border-radius: 25px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.single-page-note h2 {
+  color: var(--heading-color);
+  font-size: var(--font-size-subheading);
+  font-weight: 700;
+}
+
+[data-portfolio-mode="retro"] .single-page-mode {
+  max-width: 1180px;
+}
+
+[data-portfolio-mode="retro"] .single-page-content {
+  gap: 1rem;
+}
+
+[data-portfolio-mode="retro"] .single-page-note {
+  border-radius: 0;
+  border-color: #ffffff #404040 #404040 #ffffff;
+  border-style: solid;
+  border-width: 4px;
+  box-shadow: 5px 5px 0 var(--box-shadow-color);
+  background: var(--surface-color);
+}

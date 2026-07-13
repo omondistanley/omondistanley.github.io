@@ -1,0 +1,222 @@
+// src/styles/base/global.scss
+
+@use '../abstracts/variables';
+@use '../themes/themes' as themes;
+@use '../components/index' as components;
+
+// Apply global styles
+/* Ensure light theme never falls back to white; make it authoritative */
+html, body {
+    /* Unified flat background matching JuaCode page */
+    background: var(--background-primary) !important;
+    background-color: var(--background-primary) !important;
+    font-family: 'PT Sans', sans-serif;
+    font-size: var(--font-size-base);
+    margin: 0; /* remove outer margins to reduce space near navbar */
+    padding: 0;
+    line-height: 1.2;
+    overflow-x: hidden;
+    /* Removed global blur to avoid fixed-position issues */
+}
+/* Subtle, theme-aware scrollbar styling for the page */
+html, body {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--heading-color) 20%, transparent)
+                   color-mix(in srgb, var(--bg-color) 85%, transparent);
+}
+
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--bg-color) 85%, transparent);
+}
+
+html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--heading-color) 20%, transparent);
+  border-radius: 8px;
+}
+
+/* Dark theme-specific background and button behavior */
+[data-theme="dark"] body,
+[data-theme="dark"] html {
+  /* Dark theme uses the same flat background token */
+  background: var(--background-primary);
+  background-color: var(--background-primary);
+}
+
+/* Apply transitions to all elements */
+* {
+  transition: background-color 0.15s ease-in-out;
+}
+
+/* App-wide frosted surface: make the primary app wrapper translucent and blurred
+   so every page (not only Programs & Community) benefits from the effect */
+.app-container {
+  background: transparent !important;
+}
+
+/* Gradient utilities to match navbar modern style */
+.surface-glass {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--heading-color) 24%, transparent),
+    color-mix(in srgb, var(--bg-color) 24%, transparent)
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid color-mix(in srgb, var(--heading-color) 30%, transparent);
+  border-radius: 16px;
+}
+
+/* Button styles moved to components/Buttons/_buttons.scss to avoid global overrides */
+
+/* Synchronized blink for arrow icons:
+   Animation runs globally; hidden by default via visibility and revealed on hover */
+.blink-arrow {
+  display: inline-block;
+  will-change: opacity;
+  animation-name: blink-sync;
+  animation-duration: 1600ms; /* slower */
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
+  animation-delay: 0s;
+  animation-direction: normal;
+  visibility: hidden; /* hidden until parent hover reveals */
+}
+
+/* Reveal arrows on hover of links retained; button-specific moved to Buttons styles */
+.nav-link:hover .blink-arrow,
+button:hover .blink-arrow,
+a:hover .blink-arrow { visibility: visible; }
+
+@keyframes blink-sync {
+  0%, 75% { opacity: 0; }
+  76%, 100% { opacity: 1; }
+}
+
+/* Override blink behavior for CTA button - show arrow only on hover */
+.cta-extracurricular-btn .blink-arrow {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease;
+}
+
+.cta-extracurricular-btn:hover .blink-arrow {
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+/* CTA rows reusable utility */
+.cta-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0 1rem;
+  flex-wrap: wrap;
+  font-family: inherit;
+}
+
+/* Portfolio mode overrides: preserves the current fork while adding a Jerry-inspired systems/retro mode. */
+[data-portfolio-mode="retro"] body,
+[data-portfolio-mode="retro"] html {
+  image-rendering: auto;
+}
+
+[data-portfolio-mode="retro"] .hero-section,
+[data-portfolio-mode="retro"] .projects-section,
+[data-portfolio-mode="retro"] .about-me,
+[data-portfolio-mode="retro"] .experience-timeline,
+[data-portfolio-mode="retro"] .highlights-content,
+[data-portfolio-mode="retro"] .custom-navbar {
+  background-color: var(--surface-color) !important;
+  border-color: #ffffff #404040 #404040 #ffffff !important;
+  border-style: solid !important;
+  border-width: 4px !important;
+  border-radius: 0 !important;
+  box-shadow: 5px 5px 0 var(--box-shadow-color) !important;
+}
+
+[data-portfolio-mode="retro"] .hero-section {
+  padding: 0 !important;
+  margin: 0 0 1.5rem !important;
+}
+
+[data-portfolio-mode="retro"] .hero-section .hero-banner .banner-img {
+  border-radius: 0 !important;
+  height: 260px;
+  object-fit: cover;
+}
+
+[data-portfolio-mode="retro"] .hero-section .profile-picture {
+  border-color: #ffffff #404040 #404040 #ffffff !important;
+  border-style: solid !important;
+  border-width: 4px !important;
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0 var(--strong-shadow-color) !important;
+}
+
+[data-portfolio-mode="retro"] .project-card,
+[data-portfolio-mode="retro"] .experience-item,
+[data-portfolio-mode="retro"] .sidebar-card {
+  background-color: var(--surface-muted) !important;
+  color: var(--text-color) !important;
+  border-color: #ffffff #606060 #606060 #ffffff !important;
+  border-style: solid !important;
+  border-width: 2px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+[data-portfolio-mode="retro"] .project-card:hover,
+[data-portfolio-mode="retro"] .experience-item:hover {
+  transform: none !important;
+  box-shadow: inset 2px 2px 0 var(--box-shadow-color) !important;
+  background-color: var(--card-color) !important;
+}
+
+[data-portfolio-mode="retro"] h1,
+[data-portfolio-mode="retro"] h2,
+[data-portfolio-mode="retro"] h3,
+[data-portfolio-mode="retro"] h4,
+[data-portfolio-mode="retro"] h5 {
+  text-transform: none;
+  text-decoration: underline;
+}
+
+[data-portfolio-mode="retro"] .btn-gradient,
+[data-portfolio-mode="retro"] .btn,
+[data-portfolio-mode="retro"] .nav-link,
+[data-portfolio-mode="retro"] .live-button,
+[data-portfolio-mode="retro"] .github-button {
+  background: var(--button-bg) !important;
+  color: var(--button-text) !important;
+  border-color: #ffffff #404040 #404040 #ffffff !important;
+  border-style: solid !important;
+  border-width: 3px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+[data-portfolio-mode="retro"] .btn-gradient:hover,
+[data-portfolio-mode="retro"] .btn:hover,
+[data-portfolio-mode="retro"] .nav-link:hover {
+  background: var(--button-hover-bg, var(--button-bg)) !important;
+  transform: none !important;
+}
+
+[data-portfolio-mode="retro"] .project-card {
+  max-height: none !important;
+}
+
+[data-portfolio-mode="retro"] .project-card::after,
+[data-portfolio-mode="retro"] .highlight-card::after {
+  display: none !important;
+}
+
+[data-portfolio-mode="retro"] .project-card p {
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  line-clamp: unset !important;
+  overflow: visible !important;
+}

@@ -1,0 +1,15 @@
+.DS_Store
+.vscode/
+# Env files (do not commit secrets)
+.env*
+!.env.example
+dist/
+node_modules/
+src/.DS_Store
+src/assets/.DS_Store
+src/assets/images/.DS_Store
+src/components/.DS_Store
+netlify.toml
+PORTFOLIO_REBUILD_NOTES.md 
+CONTENT_STRUCTURE.md 
+README.md 

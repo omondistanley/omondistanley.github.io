@@ -1,0 +1,256 @@
+
+.sidebar {
+  font-family: 'PT Sans', sans-serif;
+  position: sticky; /* Fix sidebar to the viewport */
+  top: 0; /* Sticks to the top of it's container */
+  flex: 0 0 250px; /* flex-grow: 0, flex-shrink: 0, flex-basis: 250px */
+  background-color: transparent;
+  color: var(--text-color);
+  padding: 1rem;
+  box-sizing: border-box;
+  width: 250px;
+  border-radius: 25px;
+  font-size: var(--font-size-body);
+  border: 0.1px dashed var(--box-shadow-color); /* Other options: inset, outset, groove, double, dashed, dotted */
+  margin: 0;
+  overflow-y: auto; /* keep internal scroll for window effect */
+  margin-top: 1rem;
+  margin-left: -0.125rem;
+  transition: width 160ms ease, flex-basis 160ms ease, box-shadow 160ms ease, padding 160ms ease;
+  max-height: 100vh; /* safety cap; actual height set inline when expanded */
+
+  &:hover {
+    // transform: translateY(-2.5px);
+    box-shadow: 0 1px 2px var(--box-shadow-color);
+  }
+
+  @media (max-width: 767px) {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    border: none;
+    border-radius: 0;
+    height: 100vh;
+    margin-bottom: 1rem;
+    display: none;
+  }
+
+  /* Desktop collapsed state (VS Code-like) */
+  &.collapsed {
+    width: 0px; 
+    flex-basis: 0px;
+    padding: 0.5rem;
+    overflow: hidden;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+
+    .sidebar-card { display: none; }
+  }
+
+  .card-title, .card-subtitle, .card-text, .card-link {
+    color: var(--heading-color);
+  }
+
+  .card-subtitle {
+    background-color: transparent;
+    opacity: 0.8;
+  }
+  
+  .section-title {
+    color: var(--text-color);
+    opacity: 0.8;
+  }
+  
+  .sidebar-card .card-link {
+    color: var(--heading-color);
+  
+    &:hover {
+      color: var(--heading-color);
+    }
+    font-size: 1rem;
+  }
+  
+  .sidebar-card img {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+  }
+
+  /* Smaller Spotify widget to avoid pushing layout */
+  .spotify-now-playing--small {
+    display: block;
+    max-width: 180px;
+    width: 100%;
+    height: auto;
+    margin: 0.5rem auto 0.75rem auto;
+  }
+
+  .sidebar-card {
+    background-color: transparent;
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    border: none;
+    box-shadow: none;
+
+    /* Adjust padding inside the card */
+    .card-body {
+      padding: 0rem;
+      color: var(--text-color);
+      }
+  
+    .card-title {
+      margin-top: 10px;
+      font-size: var(--font-size-subheading);
+      color: var(--heading-color);
+      font-weight: 700;
+      margin-left: 1rem;
+    }
+
+    .card-link {
+      color: var(--heading-color);
+      font-size: 1rem;
+
+      &:hover {
+        color: var(--heading-color);
+      }
+    }
+
+    // Current listen
+    h5 {
+      color: var(--heading-color);
+      font-size: var(--font-size-subsubheading);
+      font-weight: 700;
+      text-align: center;
+      margin: 0.5rem;
+      border-radius: 8px;
+
+      &:hover {
+        transform: translateY(-0.5px);
+        box-shadow: 0 1px 2px var(--box-shadow-color);
+      }
+    }
+  }
+
+  /* Prefix technical skills with '>' to match About Me styling */
+  .skills-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .skills-list > li {
+    list-style: none;
+    position: relative;
+    padding-left: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .skills-list > li::before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    color: var(--heading-color);
+  }
+
+  .course-highlight {
+    font-size: 0.9rem;
+    padding: 0rem;
+    background-color: transparent;
+    margin-bottom: 0rem;
+    margin-top: 0.5rem;
+    list-style: none;
+  }
+
+  .course-highlight > li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+    strong {
+      color: var(--heading-color);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  .course-highlight > li > ul {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Prefix course items with '>' similar to About Me list */
+  .course-highlight > li > ul > li {
+    list-style: none;
+    position: relative;
+    padding-left: 0.9rem;
+  }
+
+  .course-highlight > li > ul > li::before {
+    content: ">";
+    position: absolute;
+    left: 0;
+    color: var(--heading-color);
+  }
+
+  /* Mobile version of the sidebar - completely hidden */
+  @media (max-width: 767px) {
+    display: none !important; /* Force hide sidebar on all mobile devices */
+    
+    &.active,
+    &.collapsed {
+      display: none !important; /* Ensure all states are hidden on mobile */
+    }
+  }
+}
+
+/* Subtle, theme-aware scrollbar styling for the sidebar */
+.sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--heading-color) 20%, transparent)
+                   color-mix(in srgb, var(--bg-color) 85%, transparent);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--bg-color) 85%, transparent);
+  border-radius: 8px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--heading-color) 20%, transparent);
+  border-radius: 8px;
+}
+
+.future-courses {
+  font-size: 0.9rem;
+  padding-left: 1.5em;
+  background-color: var(--card-color);
+  margin-bottom: 0rem;
+  margin-top: 0.5rem;
+  list-style-type: square;
+  list-style-position: outside;
+}
+
+.sidebar-profile-image {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100px;
+  height: 100px;
+}
+
+.sidebar-course-image {
+  border-radius: 8px;
+  object-fit: cover;
+  width: 150px;
+  height: 150px;
+}

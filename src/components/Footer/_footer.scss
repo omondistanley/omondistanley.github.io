@@ -1,0 +1,23 @@
+footer {
+    background-color: transparent;
+    color: var(--text-color);
+    text-align: center;
+    padding: 1rem;
+   }
+   
+   .footer {
+     background-color: transparent;
+     color: var(--text-color);
+     text-align: center;
+     padding: 1rem;
+     font-family: 'PT Sans', sans-serif;
+     border-top: 0.1px solid var(--border-color);
+   }
+   
+   .footer a {
+     color: var(--heading-color);
+   }
+   
+   .footer a:hover {
+     text-decoration: underline;
+   }

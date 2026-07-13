@@ -1,0 +1,13 @@
+.card-title, .card-subtitle, .card-text, .card-link {
+    color: var(--heading-color);
+  }
+  
+  .card-subtitle {
+    background-color: var(--bg-color);
+    opacity: 0.8;
+  }
+  
+  .section-title {
+    color: var(--text-color);
+    opacity: 0.8;
+  }

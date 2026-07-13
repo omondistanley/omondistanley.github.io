@@ -1,0 +1,40 @@
+// components/Skills/_skills.scss
+
+.skills-list {
+    list-style: decimal;
+    padding-left: 1.5rem;
+    margin: 0;
+    counter-reset: skill-counter;
+  }
+  
+  .skills-list li {
+    counter-increment: skill-counter;
+    position: relative;
+    margin-bottom: 1rem; // space between items
+    margin-left: 0.5rem;
+  
+    strong {
+      color: var(--heading-color);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+  
+    span {
+      color: var(--text-color);
+      opacity: 0.9;
+    }
+  
+    &::marker {
+      color: var(--heading-color);
+      font-weight: bold;
+    }
+  
+    strong,
+    span {
+      font-size: 0.9rem;
+    }
+  }
+
+  .course-highlight {
+    list-style: square;
+  }
