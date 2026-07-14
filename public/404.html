@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting…</title>
+    <!--
+      SPA fallback for GitHub Pages (adapted from rafgraph/spa-github-pages).
+      GitHub Pages serves this file for any unmatched path across the whole
+      site, including inside pr-preview/pr-<n>/ subfolders used by the PR
+      preview workflow. It re-encodes the requested path as a query string
+      and redirects to the app's real entry point, which then restores it
+      via history.replaceState (see the inline script in index.html).
+    -->
+    <script>
+      (function () {
+        var l = window.location;
+        var match = l.pathname.match(/^(\/pr-preview\/pr-\d+)(\/|$)/);
+        var basePath = match ? match[1] : '';
+        var rest = l.pathname.slice(basePath.length);
+        l.replace(
+          l.protocol + '//' + l.host + basePath + '/?/' +
+          rest.replace(/^\//, '').replace(/&/g, '~and~') +
+          (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+          l.hash
+        );
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
