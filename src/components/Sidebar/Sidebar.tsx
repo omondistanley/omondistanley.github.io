@@ -62,9 +62,12 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "", maxHeightPx }) => {
             <strong>Computer Science:</strong>
             <ul>
               <li>Artificial Intelligence</li>
+              <li>Advanced Machine Learning</li>
               <li>Natural Language Processing</li>
               <li>High Performance Machine Learning</li>
+              <li>Deep Learning & Neural Networks</li>
               <li>Neural Rendering / Computer Graphics</li>
+              <li>Computer Graphics</li>
               <li>Cloud Computing</li>
               <li>Engineering Software-as-a-Service</li>
               <li>Database Systems</li>
@@ -78,6 +81,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className = "", maxHeightPx }) => {
             <ul>
               <li>Science Research Fellow, Columbia University</li>
               <li>Matt Pincus Scholarship Fund</li>
+              <li>Dean's List</li>
               <li>Equity Leadership Scholar</li>
             </ul>
           </li>

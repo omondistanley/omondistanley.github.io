@@ -8,7 +8,9 @@ interface ProjectCardProps {
   description: string;
   links: {
     live?: string;
+    testflight?: string;
     github?: string;
+    paper?: string;
   };
   isFeatured?: boolean;
 }
@@ -31,7 +33,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     </p>
     <p>{description}</p>
     <div className={`links ${isFeatured ? "featured-links" : ""}`}>
-      {isFeatured && links.live && (
+      {links.live && (
         <Button
           variant="outline-secondary"
           className="btn-gradient live-button"
@@ -40,6 +42,28 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           rel="noopener noreferrer"
         >
           Live Site
+        </Button>
+      )}
+      {links.testflight && (
+        <Button
+          variant="outline-secondary"
+          className="btn-gradient testflight-button"
+          href={links.testflight}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          TestFlight
+        </Button>
+      )}
+      {links.paper && (
+        <Button
+          variant="outline-secondary"
+          className="btn-gradient paper-button"
+          href={links.paper}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Paper
         </Button>
       )}
       {links.github && (
@@ -67,6 +91,8 @@ export const projects = [
       "AI-powered travel and social-planning system that converts short-form video inspiration into structured planning data. Built iOS reel/video ingestion with frame extraction, confidence-scored location/activity extraction, Google Maps place resolution, and FastAPI/PostgreSQL storage for recommendations, shared maps, and calendar-aware planning.",
     links: {
       github: "https://github.com/omondistanley/roam-mvp",
+      live: "https://roam-alpha.web.app/",
+      testflight: "https://testflight.apple.com/join/CHpUX4F4",
     },
     isFeatured: true,
   },
@@ -96,7 +122,7 @@ export const projects = [
     isFeatured: true,
   },
   {
-    name: "MistralMoE",
+    name: "Knowledge Distillation for Scalable Mixture-of-Expert Models",
     technologies:
       "Python, PyTorch, Transformers, PEFT/LoRA, W&B, MoE Evaluation",
     date: "2026",
@@ -104,27 +130,17 @@ export const projects = [
       "Knowledge distillation and sparse-upcycling research for Mixture-of-Experts language models. Upcycled a 7B dense model into a sparse MoE using pretrained experts, LoRA, and distillation, with experiments reporting up to +3.0 MMLU points, 65.6% FLOPs reduction, and 2.85x throughput improvements.",
     links: {
       github: "https://github.com/omondistanley/MistralMoE",
+      paper: "https://github.com/omondistanley/MistralMoE/blob/master/MoE%20Final%20Paper.pdf",
     },
     isFeatured: true,
   },
   {
-    name: "Neural Volume Rendering + Transfer Learning",
-    technologies:
-      "Python, PyTorch, Neural Rendering, NeRFs, 3D Reconstruction, Transfer Learning",
-    date: "2026",
-    description:
-      "Graphics/ML project exploring neural scene representation, volume rendering, and transfer-learning workflows for 3D reconstruction. This sits directly beside my visual-computing interests in CITV, ray tracing, and computer graphics.",
-    links: {
-      github: "https://github.com/omondistanley/Nerfs-and-transfer-learning",
-    },
-  },
-  {
     name: "Neural Volume Rendering",
     technologies:
-      "Python, PyTorch, Differentiable Rendering, Camera Geometry, Volumetric Scenes",
+      "Python, PyTorch, Neural Rendering, NeRFs, Differentiable Rendering, 3D Reconstruction, Transfer Learning",
     date: "2026",
     description:
-      "Companion neural rendering implementation focused on camera rays, volumetric accumulation, and differentiable graphics concepts. Included as a deeper proof point for graphics/ML roles and research-engineering storytelling.",
+      "Graphics/ML case study spanning neural scene representation, differentiable volume rendering, camera-ray geometry, and transfer-learning workflows for 3D reconstruction — sitting alongside CITV and my broader visual-computing interests.",
     links: {
       github: "https://github.com/omondistanley/Neural-Volume-Rendering",
     },
@@ -141,28 +157,6 @@ export const projects = [
     },
   },
   {
-    name: "Ray Tracer / Computer Graphics",
-    technologies:
-      "C++, Ray Tracing, Phong Shading, BVH, TriMesh, Geometry",
-    date: "2025",
-    description:
-      "Low-level graphics project implementing camera rays, sphere/triangle intersections, Phong shading, acceleration structures, and mesh rendering. Important proof of graphics fundamentals behind my computer vision and neural rendering interests.",
-    links: {
-      github: "https://github.com/omondistanley/ComputerGraphics",
-    },
-  },
-  {
-    name: "CUDA + High Performance ML Labs",
-    technologies:
-      "CUDA, C/C++, Python, GPU Programming, Parallel Computing, Performance Analysis",
-    date: "2026",
-    description:
-      "GPU programming and high-performance machine learning work focused on kernels, memory behavior, parallel execution, and the systems layer underneath ML workloads. This supports my interest in efficient AI systems, not just model usage.",
-    links: {
-      github: "https://github.com/omondistanley/cuda_learning",
-    },
-  },
-  {
     name: "2048 AI Solver",
     technologies: "Python, Search, Expectiminimax, Alpha-Beta Pruning, Heuristic Evaluation",
     date: "2025",
@@ -170,46 +164,7 @@ export const projects = [
       "AI decision engine for 2048 using iterative-deepening expectiminimax, probabilistic tile modeling, and heuristic scoring over empty tiles, monotonicity, smoothness, corner placement, and merge potential.",
     links: {
       github: "https://github.com/omondistanley/2048-Puzzle-AI-Agent-Solver",
-    },
-  },
-  {
-    name: "HTTP Client/Server + TCP Lookup",
-    technologies: "C, POSIX Sockets, HTTP/1.0, HTTP/1.1, TCP/IP, Systems Programming",
-    date: "2024",
-    description:
-      "Systems programming project implementing an HTTP client/server and persistent backend TCP lookup service. Includes request validation, error handling, logging, and networking fundamentals that show comfort below the web-framework layer.",
-    links: {
-      github: "https://github.com/omondistanley/HTTP-server-and-client-programming",
-    },
-  },
-  {
-    name: "Expense Tracker Microservices",
-    technologies: "Python, FastAPI, MySQL, REST, HATEOAS, Google Cloud",
-    date: "2024",
-    description:
-      "Microservices project with RESTful user, budget, and expense services, pagination, HATEOAS links, and cloud deployment. A strong early backend systems project that later informed the architecture of Pocketii.",
-    links: {
-      github: "https://github.com/omondistanley/user-microservice",
-    },
-  },
-  {
-    name: "Anchorpoint",
-    technologies: "TypeScript, React, Product Engineering, Web App Architecture",
-    date: "2026",
-    description:
-      "Product-oriented web application work focused on building a clear user experience around structured workflows. Included as a supporting product-engineering artifact alongside larger AI and systems projects.",
-    links: {
-      github: "https://github.com/omondistanley/anchorpoint",
-    },
-  },
-  {
-    name: "CNN / Residual Networks Exploration",
-    technologies: "Python, PyTorch, CNNs, Residual Networks, Model Training",
-    date: "2026",
-    description:
-      "Smaller ML labs exploring convolutional networks, residual connections, and training behavior. These are supporting projects rather than homepage features, but they reinforce the ML fundamentals behind the larger research projects.",
-    links: {
-      github: "https://github.com/omondistanley/residual-networks",
+      live: "https://2048-puzzle-ai-agent-solver.fly.dev/",
     },
   },
 ];

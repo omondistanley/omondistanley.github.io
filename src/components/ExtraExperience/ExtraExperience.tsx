@@ -56,7 +56,7 @@ const ProgramsCommunity: React.FC = () => {
           ]}
         />
         <ExperienceItem
-          role="Student"
+          role="Member"
           company="CodePath"
           duration="May 2024 - Aug 2024"
           location="Remote"

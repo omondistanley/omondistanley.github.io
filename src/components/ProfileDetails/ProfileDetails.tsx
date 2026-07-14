@@ -42,13 +42,13 @@ const ProfileDetails: React.FC = () => {
       <div className="profile-info">
         <h1>Stanley Omondi</h1>
         <h4>
-          CS @ Columbia University | Prev @ Oracle
+          Computer Science @ Columbia University, 2026 | Prev @ Oracle
         </h4>
         <div className="hero-buttons mt-3">
           <Button
             variant="outline-secondary"
             className="btn-gradient"
-            href="/Stanley_Omondi_Resume.pdf"
+            href="/Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleDownloadResume}

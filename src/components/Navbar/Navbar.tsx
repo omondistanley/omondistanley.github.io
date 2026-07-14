@@ -4,238 +4,142 @@ import "./_navbar.scss";
 import { useSpotify } from "../../contexts/SpotifyContext";
 import { usePortfolioMode } from "../../contexts/PortfolioModeContext";
 
+interface NavItem {
+  path: string;
+  label: string;
+  extraActive?: string[];
+}
+
+const NAV_ITEMS: NavItem[] = [
+  { path: "/", label: "Who Am I?" },
+  { path: "/technical", label: "Technical" },
+  { path: "/coursework", label: "Coursework" },
+  { path: "/projects", label: "Projects" },
+  { path: "/programs-community", label: "Programs & Community", extraActive: ["/extra-experience"] },
+  { path: "/fun", label: "Quests" },
+  { path: "/single-page", label: "Single Page" },
+];
+
 const CustomNavbar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { mode, toggleMode } = usePortfolioMode();
-  
-  // Helper function to check if a nav link should be active
-  const isActive = (path: string) => {
-    return location.pathname === path;
-  };
-  
+
+  const isActive = (path: string) => location.pathname === path;
+
   // Prefer dark mode but respect user's stored theme preference
   const [theme, setTheme] = useState<string>(() => {
     const storedTheme = localStorage.getItem("theme");
     return storedTheme ? storedTheme : "dark";
   });
 
-  // Track scroll position for blur effect
-  const [scrolled, setScrolled] = useState<boolean>(false);
-
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  // Handle scroll for blur effect
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setScrolled(scrollTop > 50);
-    };
-    
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  // Handle theme toggle
   const handleThemeToggle = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme); // Save to local storage
+    localStorage.setItem("theme", newTheme);
   };
-
-  // Control navbar expanded state for mobile and handle outside clicks
-  const [expanded, setExpanded] = useState<boolean>(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const onClickOutside = (e: MouseEvent) => {
-      if (expanded && containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setExpanded(false);
-      }
-    };
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [expanded]);
-
-  // Measure navbar height and expose as CSS variable for layout spacing
-  useEffect(() => {
-    const updateHeightVar = () => {
-      const h = containerRef.current?.offsetHeight || 64;
-      document.documentElement.style.setProperty("--navbar-height", `${h}px`);
-    };
-    updateHeightVar();
-    window.addEventListener("resize", updateHeightVar);
-    return () => window.removeEventListener("resize", updateHeightVar);
-  }, []);
-
-  // Recalculate height when expanded/collapsed so the spacer pushes content correctly
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => {
-      const h = containerRef.current?.offsetHeight || 64;
-      document.documentElement.style.setProperty("--navbar-height", `${h}px`);
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [expanded]);
 
   // Spotify state for brand animation
   const { isPlaying } = useSpotify();
 
-  // Navigation handler that scrolls to top and closes mobile menu
   const handleNavigation = (path: string) => {
     navigate(path);
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 100);
-    setExpanded(false);
   };
 
   // Wiggle effect on brand click
   const brandRef = useRef<HTMLButtonElement | null>(null);
   const handleBrandClick = () => {
-    // Only wiggle when Spotify is NOT playing (icon logo state)
     if (!isPlaying && brandRef.current) {
-      brandRef.current.classList.remove('wiggle-once');
-      // Force reflow to restart the animation if clicked multiple times
+      brandRef.current.classList.remove("wiggle-once");
       void brandRef.current.offsetWidth;
-      brandRef.current.classList.add('wiggle-once');
+      brandRef.current.classList.add("wiggle-once");
     }
-    handleNavigation('/');
+    handleNavigation("/");
   };
 
-  // No decorative river effect
-
   return (
-    <nav
-      className={`custom-navbar ${scrolled ? "scrolled" : ""} ${expanded ? "expanded" : ""}`}
-      ref={containerRef}
-      aria-label="Primary navigation"
-    >
-      <div className="navbar-content">
-        <button
-          className={`navbar-brand vinyl-disk ${isPlaying ? 'playing' : ''}`}
-          onClick={handleBrandClick}
-          aria-label="Home"
-          style={{ border: 'none', background: 'transparent', padding: 0 }}
-          ref={brandRef}
-        >
-          {isPlaying ? (
+    <nav className="custom-navbar" aria-label="Primary navigation">
+      <button
+        className={`navbar-brand vinyl-disk ${isPlaying ? "playing" : ""}`}
+        onClick={handleBrandClick}
+        aria-label="Home"
+        style={{ border: "none", background: "transparent", padding: 0 }}
+        ref={brandRef}
+      >
+        {isPlaying ? (
+          <img
+            src={theme === "light" ? "/brand/vinyl-light.svg" : "/brand/vinyl-dark.svg"}
+            alt="Vinyl logo"
+            width={40}
+            height={40}
+            className={`brand-logo ${isPlaying ? "playing" : ""}`}
+            decoding="async"
+            loading="eager"
+          />
+        ) : (
+          <picture>
+            <source srcSet="/portfolio-logo.webp" type="image/webp" />
             <img
-              src={theme === 'light' ? '/brand/vinyl-light.svg' : '/brand/vinyl-dark.svg'}
-              alt="Vinyl logo"
-              width={48}
-              height={48}
-              className={`brand-logo ${isPlaying ? 'playing' : ''}`}
+              src="/portfolio-logo.png"
+              alt="Logo"
+              width={40}
+              height={40}
+              className="brand-logo"
               decoding="async"
               loading="eager"
             />
-          ) : (
-            <picture>
-              <source srcSet="/portfolio-logo.webp" type="image/webp" />
-              <img
-                src="/portfolio-logo.png"
-                alt="Logo"
-                width={48}
-                height={48}
-                className="brand-logo"
-                decoding="async"
-                loading="eager"
-              />
-            </picture>
-          )}
-          <span className="sr-only">Stanley Oduor</span>
-        </button>
-        <div id="primary-nav" className="navbar-collapse">
-          <div id="primary-links" className="navbar-links">
-            <button
-              className={`nav-link btn-gradient ${isActive('/') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/')}
-              style={{ border: 'none' }}
-            >
-              Who Am I?
-            </button>
-            <button
-              className={`nav-link btn-gradient ${isActive('/technical') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/technical')}
-              style={{ border: 'none' }}
-            >
-              Technical
-            </button>
-            <button 
-              className={`nav-link btn-gradient ${isActive('/projects') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/projects')}
-              style={{ border: 'none' }}
-            >
-              Projects
-            </button>
-            <button 
-              className={`nav-link btn-gradient ${isActive('/programs-community') || isActive('/extra-experience') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/programs-community')}
-              style={{ border: 'none' }}
-            >
-              Programs & Community
-            </button>
-            <button
-              className={`nav-link btn-gradient ${isActive('/fun') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/fun')}
-              style={{ border: 'none' }}
-            >
-              Fun Stuff
-            </button>
-            <button
-              className={`nav-link btn-gradient ${isActive('/single-page') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/single-page')}
-              style={{ border: 'none' }}
-            >
-              Single Page
-            </button>
-            <button
-              className={`nav-link btn-gradient ${isActive('/highlights') ? 'active' : ''}`}
-              onClick={() => handleNavigation('/highlights')}
-              style={{ border: 'none' }}
-            >
-              Git Stats
-            </button>
-          </div>
-        </div>
-        {/* Right-side actions: theme toggle and mobile hamburger */}
-        <div className="navbar-actions">
-          <div className="theme-switch-container">
-            <button
-              type="button"
-              className="btn-gradient theme-toggle"
-              aria-label={mode === 'modern' ? 'Switch to retro systems mode' : 'Switch to modern portfolio mode'}
-              title={mode === 'modern' ? 'Retro systems mode' : 'Modern portfolio mode'}
-              onClick={toggleMode}
-            >
-              {mode === 'modern' ? 'Retro' : 'Modern'}
-            </button>
-          </div>
-          <div className="theme-switch-container">
-            <button
-              type="button"
-              className="btn-gradient theme-toggle icon-only"
-              aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-              title={theme === 'dark' ? 'Light theme' : 'Dark theme'}
-              onClick={handleThemeToggle}
-            >
-              <i className={`fa ${theme === 'dark' ? 'fa-moon' : 'fa-sun'}`} aria-hidden="true" />
-            </button>
-          </div>
+          </picture>
+        )}
+        <span className="sr-only">Stanley Oduor</span>
+      </button>
+
+      <div className="navbar-links">
+        {NAV_ITEMS.map((item) => (
           <button
-            className="navbar-toggle mobile-only"
-            aria-expanded={expanded}
-            aria-controls="primary-nav"
-            onClick={() => setExpanded((e) => !e)}
+            key={item.path}
+            className={`nav-link btn-gradient ${
+              isActive(item.path) || item.extraActive?.some(isActive) ? "active" : ""
+            }`}
+            onClick={() => handleNavigation(item.path)}
+            style={{ border: "none" }}
           >
-            <span className="navbar-toggler-icon" aria-hidden="true" />
-            <span className="sr-only">Toggle navigation</span>
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="navbar-actions">
+        <div className="theme-switch-container">
+          <button
+            type="button"
+            className="btn-gradient theme-toggle"
+            aria-label={mode === "modern" ? "Switch to retro systems mode" : "Switch to modern portfolio mode"}
+            title={mode === "modern" ? "Retro systems mode" : "Modern portfolio mode"}
+            onClick={toggleMode}
+          >
+            {mode === "modern" ? "Retro" : "Modern"}
+          </button>
+        </div>
+        <div className="theme-switch-container">
+          <button
+            type="button"
+            className="btn-gradient theme-toggle icon-only"
+            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            title={theme === "dark" ? "Light theme" : "Dark theme"}
+            onClick={handleThemeToggle}
+          >
+            <i className={`fa ${theme === "dark" ? "fa-moon" : "fa-sun"}`} aria-hidden="true" />
           </button>
         </div>
       </div>
-      {/* Decorative river layer removed */}
     </nav>
   );
 };

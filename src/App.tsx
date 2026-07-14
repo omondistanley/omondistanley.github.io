@@ -7,6 +7,7 @@ import Hero from "./components/HeroSection/HeroSection";
 import AboutMe from "./components/AboutMe/AboutMe";
 import Footer from "./components/Footer/Footer";
 import TechnicalHighlights from "./components/Highlights/TechnicalHighlights";
+import TechnicalSkills from "./components/TechnicalSkills/TechnicalSkills";
 import FeaturedProjects from "./components/Projects/FeaturedProjects";
 const Highlights = React.lazy(() => import("./pages/Highlights"));
 const ProgramsCommunity = React.lazy(() => import("./pages/ProgramsCommunity"));
@@ -14,6 +15,7 @@ const ProjectsPage = React.lazy(() => import("./pages/Projects"));
 const TechnicalExperiencePage = React.lazy(() => import("./pages/Technical"));
 const Fun = React.lazy(() => import("./pages/Fun"));
 const SinglePage = React.lazy(() => import("./pages/SinglePage"));
+const Coursework = React.lazy(() => import("./pages/Coursework"));
 import { SpotifyProvider } from "./contexts/SpotifyContext";
 import { PortfolioModeProvider } from "./contexts/PortfolioModeContext";
 import "./styles/main.scss";
@@ -53,6 +55,7 @@ const MainPortfolio: React.FC = () => {
                 <TechnicalHighlights />
               </Col>
             </Row>
+            <TechnicalSkills />
             <FeaturedProjects />
             <div
               className="cta-row"
@@ -87,6 +90,7 @@ const App: React.FC = () => {
           <Route path="/" element={<MainPortfolio />} />
           <Route path="/projects" element={<ProjectsPage />} />
           <Route path="/technical" element={<TechnicalExperiencePage />} />
+          <Route path="/coursework" element={<Coursework />} />
           <Route path="/programs-community" element={<ProgramsCommunity />} />
           <Route path="/extra-experience" element={<ProgramsCommunity />} />
           <Route path="/fun" element={<Fun />} />
