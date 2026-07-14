@@ -1,0 +1,95 @@
+.fun-section {
+  margin: 0 auto 2.5rem;
+  max-width: var(--max-content-width);
+
+  > h3 {
+    font-size: var(--font-size-subheading);
+    font-weight: 400;
+    color: var(--heading-color);
+    margin-bottom: 0.75rem;
+  }
+}
+
+.fun-subsection {
+  margin-bottom: 1.25rem;
+}
+
+.fun-toggle-heading {
+  margin: 0 0 0.5rem;
+}
+
+.fun-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
+  color: color-mix(in srgb, var(--text-color) 65%, var(--bg-color) 35%);
+  transition: color 150ms ease;
+
+  &:hover {
+    color: var(--heading-color);
+  }
+}
+
+.fun-toggle-icon {
+  font-size: 0.7em;
+  width: 0.9em;
+}
+
+.fun-toggle-count {
+  font-size: 0.75em;
+  color: color-mix(in srgb, var(--text-color) 45%, var(--bg-color) 55%);
+}
+
+.gallery-empty {
+  color: color-mix(in srgb, var(--text-color) 55%, var(--bg-color) 45%);
+  font-style: italic;
+}
+
+// Masonry via CSS columns: photos keep their natural aspect ratio and
+// flow into balanced columns, instead of being cropped into equal tiles.
+// Bounded height + scroll so a large gallery doesn't push the whole page down.
+.gallery-grid {
+  column-count: 2;
+  column-gap: 0.75rem;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  scrollbar-width: thin;
+
+  @media (min-width: 640px) {
+    column-count: 3;
+  }
+
+  @media (min-width: 1024px) {
+    column-count: 4;
+  }
+}
+
+.gallery-item {
+  display: block;
+  break-inside: avoid;
+  margin-bottom: 0.75rem;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: opacity 200ms ease;
+
+  &:hover {
+    opacity: 0.88;
+  }
+
+  img,
+  video {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}

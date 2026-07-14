@@ -35,6 +35,38 @@
     margin-top: -0.5rem;
   }
 
+  .about-path {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    color: color-mix(in srgb, var(--text-color) 55%, var(--bg-color) 45%);
+    margin-bottom: 0.25rem;
+  }
+
+  h2.about-tagline {
+    margin-top: 0;
+  }
+
+  .about-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .about-tag {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--heading-color) 30%, transparent);
+    color: var(--text-color);
+    background: color-mix(in srgb, var(--heading-color) 8%, transparent);
+  }
+
+  .about-focus {
+    font-weight: 600;
+    color: var(--heading-color);
+  }
+
   h5 {
     color: var(--heading-color);
     font-weight: 700;

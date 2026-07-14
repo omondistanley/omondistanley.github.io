@@ -1,64 +1,180 @@
-import React from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { useState } from "react";
 import CustomNavbar from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 import Layout from "../components/Layouts/Layout";
 import "../components/Projects/_projects.scss";
+import "./_fun-gallery.scss";
 
-const funItems = [
+interface GalleryItem {
+  src: string;
+  alt: string;
+  type?: "image" | "video";
+}
+
+interface GallerySubsection {
+  title: string;
+  items: GalleryItem[];
+}
+
+interface FunSection {
+  title: string;
+  subsections?: GallerySubsection[];
+  items?: GalleryItem[];
+}
+
+const funSections: FunSection[] = [
   {
     title: "Art Wall",
-    description:
-      "A place for sketches, visual experiments, graphic studies, and pieces I make outside formal engineering work. The portfolio includes placeholder slots so I can drop in real images later without changing the structure.",
+    subsections: [
+      {
+        title: "Walks",
+        items: [
+          { src: "/art/walks/img-3630.jpg", alt: "Walks 1" },
+          { src: "/art/walks/img-3631.jpg", alt: "Walks 2" },
+          { src: "/art/walks/img-3632.jpg", alt: "Walks 3" },
+        ],
+      },
+      {
+        title: "Views",
+        items: [
+          { src: "/art/views/img-8540.jpg", alt: "Views 1" },
+          { src: "/art/views/img-8543.jpg", alt: "Views 2" },
+        ],
+      },
+      {
+        title: "Cooking",
+        items: [
+          { src: "/fun/cooking/img-9270.jpg", alt: "Cooking 1" },
+          { src: "/fun/cooking/img-9268.jpg", alt: "Cooking 2" },
+          { src: "/fun/cooking/img-9269.jpg", alt: "Cooking 3" },
+          { src: "/fun/cooking/img-9276.jpg", alt: "Cooking 4" },
+        ],
+      },
+    ],
   },
   {
-    title: "Graphics Playground",
-    description:
-      "Small experiments around rendering, scene composition, animation, ray tracing, neural rendering, and visual computing — the fun side of the same interests behind CITV and graphics research.",
+    title: "Photography & Visuals",
+    items: [],
   },
   {
-    title: "Photography & Film Looks",
-    description:
-      "A lightweight gallery concept for street photos, travel images, color grading experiments, and visual references that influence how I think about interfaces and visual systems.",
-  },
-  {
-    title: "Food Experiments",
-    description:
-      "Cooking, baking, recipe experiments, and the small lessons that come from making things by hand. This gives the site a more human layer without taking away from the technical portfolio.",
-  },
-  {
-    title: "Music & Listening Notes",
-    description:
-      "A place to capture what I am listening to, what I am replaying, and the kind of sound or mood I like working around.",
-  },
-  {
-    title: "Idea Notebook",
-    description:
-      "Unpolished product ideas, interaction patterns, AI concepts, and little observations that could become future projects.",
+    title: "Memes & Gimmicks",
+    items: [
+      { src: "/fun/memes-gimmicks/img-6517.jpg", alt: "Memes & Gimmicks 1" },
+      { src: "/fun/memes-gimmicks/img-9269.jpg", alt: "Memes & Gimmicks 2" },
+      { src: "/fun/memes-gimmicks/img-8577.jpg", alt: "Memes & Gimmicks 3" },
+      { src: "/fun/memes-gimmicks/img-8588.jpg", alt: "Memes & Gimmicks 4" },
+      { src: "/fun/memes-gimmicks/img-2691-clip.mp4", alt: "Memes & Gimmicks clip", type: "video" },
+    ],
   },
 ];
 
+const GalleryGrid: React.FC<{ items: GalleryItem[] }> = ({ items }) => {
+  if (items.length === 0) {
+    return <p className="gallery-empty">More coming soon.</p>;
+  }
+  return (
+    <div className="gallery-grid">
+      {items.map((item) => (
+        <a
+          key={item.src}
+          href={item.src}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="gallery-item"
+        >
+          {item.type === "video" ? (
+            <video src={item.src} muted loop playsInline preload="metadata" />
+          ) : (
+            <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
+          )}
+        </a>
+      ))}
+    </div>
+  );
+};
+
+const Toggle: React.FC<{
+  label: string;
+  count: number;
+  open: boolean;
+  onClick: () => void;
+  as: "h3" | "h4";
+}> = ({ label, count, open, onClick, as: Tag }) => (
+  <Tag className="fun-toggle-heading">
+    <button
+      type="button"
+      className="fun-toggle"
+      onClick={onClick}
+      aria-expanded={open}
+    >
+      <i className={`fa fa-chevron-${open ? "down" : "right"} fun-toggle-icon`} aria-hidden="true" />
+      <span>{label}</span>
+      <span className="fun-toggle-count">{count}</span>
+    </button>
+  </Tag>
+);
+
 const Fun: React.FC = () => {
+  const [openKeys, setOpenKeys] = useState<Set<string>>(new Set());
+
+  const toggle = (key: string) => {
+    setOpenKeys((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+      return next;
+    });
+  };
+
   return (
     <div className="app-container">
       <CustomNavbar />
       <div className="navbar-spacer" aria-hidden />
       <Layout sidebarVariant="spotifyOnly">
         <section id="fun" className="projects-section my-1">
-          <h2>Fun Stuff</h2>
-          <p style={{ maxWidth: "760px", margin: "0 auto 1rem", textAlign: "center" }}>
-            Not everything has to be a polished project. This is where I want to keep the art, experiments, visuals, food, music, and ideas that make the technical work feel more alive.
-          </p>
-          <Row className="g-4 justify-content-left project grid">
-            {funItems.map((item) => (
-              <Col key={item.title} xs={12} sm={6} md={6} lg={4} xl={4}>
-                <div className="project-card">
-                  <h3>{item.title}</h3>
-                  <p>{item.description}</p>
-                </div>
-              </Col>
-            ))}
-          </Row>
+          <h2>Quests</h2>
+          {funSections.map((section) => {
+            const sectionKey = section.title;
+            return (
+              <div key={sectionKey} className="fun-section">
+                {section.subsections ? (
+                  <>
+                    <h3>{section.title}</h3>
+                    {section.subsections.map((sub) => {
+                      const key = `${sectionKey}::${sub.title}`;
+                      const open = openKeys.has(key);
+                      return (
+                        <div key={key} className="fun-subsection">
+                          <Toggle
+                            as="h4"
+                            label={sub.title}
+                            count={sub.items.length}
+                            open={open}
+                            onClick={() => toggle(key)}
+                          />
+                          {open && <GalleryGrid items={sub.items} />}
+                        </div>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <Toggle
+                    as="h3"
+                    label={section.title}
+                    count={section.items?.length ?? 0}
+                    open={openKeys.has(sectionKey)}
+                    onClick={() => toggle(sectionKey)}
+                  />
+                )}
+                {!section.subsections && openKeys.has(sectionKey) && (
+                  <GalleryGrid items={section.items ?? []} />
+                )}
+              </div>
+            );
+          })}
         </section>
       </Layout>
       <Footer />

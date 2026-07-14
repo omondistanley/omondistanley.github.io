@@ -19,12 +19,12 @@ const SinglePage: React.FC = () => (
       <ProgramsCommunityContent />
       <ProjectsShowcase />
       <section className="single-page-note">
-        <h2>Fun Stuff</h2>
+        <h2>Quests</h2>
         <p>
           A lighter section for art, sketches, graphics experiments, food notes, music, and visual ideas that sit outside the strict project archive.
         </p>
         <a href="/fun" className="btn-gradient cta-extracurricular-btn" style={{ textDecoration: "none" }}>
-          Open Fun Stuff <i className="fa fa-arrow-right blink-arrow"></i>
+          Open Quests <i className="fa fa-arrow-right blink-arrow"></i>
         </a>
       </section>
     </main>

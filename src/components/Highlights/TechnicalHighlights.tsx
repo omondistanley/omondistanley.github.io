@@ -24,33 +24,33 @@ const TechnicalHighlights: React.FC = () => {
         {(
           [
             {
-              role: "Fullstack Software Engineer",
-              company: "Columbia Build Lab / Sachi Health",
-              duration: "Sep 2025 - Dec 2025",
-              location: "New York, NY",
+              role: "Full-Stack Software Engineer Intern",
+              company: "Sachi Health",
+              duration: "Sept 2025 - Dec 2025",
+              location: "Columbia Build Lab",
               description: [
-                "Engineered a clinical-trial RAG pipeline parsing unstructured papers and PCOS literature, normalizing eligibility, symptoms, treatments, and outcomes into structured data for recommendation workflows.",
-                "Shipped 6 React Native/TypeScript visualization screens for MVP testers, making complex user health data more actionable and intuitive.",
+                "Built a clinical-trial RAG pipeline that parsed research papers and normalized eligibility, symptom, treatment, and outcome data into PostgreSQL.",
+                "Shipped 6 React Native and TypeScript visualization screens for MVP testers in collaboration with product design and research teams.",
               ],
             },
             {
               role: "Solutions Engineering Intern",
-              company: "Oracle — Customer Success Services",
+              company: "Oracle",
               duration: "May 2025 - Aug 2025",
-              location: "Redwood City, CA",
+              location: "Redwood Shores, CA",
               description: [
                 "Built AI-assisted Fast Formula workflows in Oracle Fusion HCM to generate, explain, and debug payroll logic, reducing manual troubleshooting by 25%.",
-                "Prototyped 2 low-code AI agents and demoed Redwood/HCM AI capabilities to clients, translating adoption feedback into integration fixes and product notes.",
+                "Prototyped 2 low-code AI agents and demonstrated Redwood and HCM AI capabilities to clients, translating adoption feedback into integration fixes and product notes.",
               ],
             },
             {
-              role: "Undergraduate Research Assistant",
-              company: "Columbia University — CITV",
+              role: "Undergraduate Researcher (DAPLab) | Creatures in the TV",
+              company: "Columbia University",
               duration: "Jan 2026 - May 2026",
-              location: "New York, NY",
+              location: "New York City, NY",
               description: [
-                "Investigated context-aware creature insertion by converting RGB scenes into depth maps, object masks, semantic labels, 2D/3D coordinates, and region-aware scene graphs.",
-                "Prototyped and evaluated scene-aware path and trajectory generation using depth-/affordance-aware constraints and motion-path workflows.",
+                "Engineered an experimental pipeline that converted single RGB images into depth-backed 2D/3D scene graphs for context-aware creature-insertion research.",
+                "Extended a multi-model perception workflow combining GroundingDINO, SAM2, and Depth Anything V2, fusing open-vocabulary detections with per-mask depth statistics and camera back-projection into structured scene JSON.",
               ],
             },
           ] as Experience[]
